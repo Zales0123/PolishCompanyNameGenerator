@@ -94,7 +94,16 @@
                     "transport": ["TRANS", "SPED", "CARGO", "LOG", "SPEED"]
                 }
 
-                return companyName + getRandomFromArray(industries[industry]);
+                let industryName = getRandomFromArray(industries[industry]);
+
+                let lastLetter = companyName.charAt(companyName.length - 1);
+                let firstLetter = industryName.charAt(0);
+
+                if (lastLetter === firstLetter) {
+                    industryName = industryName.substring(1);
+                }
+
+                return companyName + industryName;
             }
 
             function getRandomFromArray(array) {
