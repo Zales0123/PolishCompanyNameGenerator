@@ -1,0 +1,131 @@
+<html lang="pl">
+    <head>
+        <title>Generator nazw polskich firm</title>
+        <style>
+            form {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+            }
+            form input {
+                width: 300px;
+                height: 30px;
+                border: 1px solid #ccc;
+                border-radius: 3px;
+                margin: 8px;
+                padding: 0 8px;
+            }
+            form select {
+                width: 300px;
+                height: 30px;
+                border: 1px solid #ccc;
+                border-radius: 3px;
+                margin: 8px;
+                padding: 0 8px;
+            }
+            form button {
+                width: 300px;
+                height: 30px;
+                border: 1px solid #ccc;
+                border-radius: 3px;
+                margin: 8px;
+                padding: 0 8px;
+                background-color: #eee;
+            }
+            form button:hover {
+                background-color: #ddd;
+            }
+
+            /* generate CSS for #result */
+            #result {
+                text-align: center;
+                font-size: 2rem;
+                font-weight: bold;
+                color: #555;
+            }
+        </style>
+    </head>
+    <body>
+        <h1 id="result"></h1>
+        <form>
+            <input type="text" name="name" placeholder="Imię"/><br/>
+            <input type="text" name="surname" placeholder="Nazwisko"/><br/>
+            Branża:
+            <select name="industry">
+                <option value="agriculture">Rolnictwo</option>
+                <option value="timber">Budowlanka</option>
+                <option value="fish">Ryby</option>
+                <option value="it">IT</option>
+                <option value="transport">Transport</option>
+            </select> <br/>
+            <input type="checkbox" name="big-company" /> Duża firma? <br/>
+            <input type="checkbox" name="international" /> Międzynarodowa? <br/>
+            <button type="button">Generuj</button>
+        </form>
+        <script src="industries.json" type="application/json"></script>
+        <script>
+            function generateName() {
+                let name = document.querySelector('input[name="name"]').value.substring(0, 3).toUpperCase();
+                let surname = document.querySelector('input[name="surname"]').value.substring(0, 3).toUpperCase();
+                let industry = document.querySelector('select[name="industry"]').value;
+                let bigCompany = document.querySelector('input[name="big-company"]').checked;
+                let international = document.querySelector('input[name="international"]').checked;
+                let result = document.querySelector('#result');
+
+                let companyName = '';
+
+                companyName = addByChance(companyName, international ? 1 : 0, 'INTER');
+                companyName = addByChanceWithAlternative(companyName, 0.5, surname, name);
+                companyName = addByChance(companyName, 0.4, '-');
+                companyName = includeIndustry(companyName, industry);
+                companyName = addByChance(companyName, 0.7, 'POL');
+                companyName = addByChanceWithAlternativeCallback(companyName, bigCompany ? 1 : 0, 'EX', addByChance(companyName, 0.3, 'IX'));
+
+                result.innerHTML = companyName;
+            }
+
+            function includeIndustry(companyName, industry) {
+                let industries = {
+                    "agriculture": ["AGRO", "ZIEL", "ROL", "ZBOŻ"],
+                    "fish": ["RYB", "MORS", "KARP"],
+                    "it": ["SOFT", "TECH", "KOMP", "NET"],
+                    "timber": ["BUD", "REMONT"],
+                    "transport": ["TRANS", "SPED", "CARGO", "LOG", "SPEED"]
+                }
+
+                return companyName + getRandomFromArray(industries[industry]);
+            }
+
+            function getRandomFromArray(array) {
+                return array[Math.floor(Math.random() * array.length)];
+            }
+            function addByChance(companyName, chance, addition) {
+
+                if (Math.random() < chance) {
+                    return companyName + addition;
+                }
+
+                return companyName;
+            }
+
+            function addByChanceWithAlternative(companyName, chance, addition, alternative) {
+                if (Math.random() < chance) {
+                    return companyName + addition;
+                }
+
+                return companyName + alternative;
+            }
+
+            function addByChanceWithAlternativeCallback(companyName, chance, addition, callback) {
+                if (Math.random() < chance) {
+                    return companyName + addition;
+                }
+
+                return callback;
+            }
+
+            document.querySelector('button').addEventListener('click', generateName);
+        </script>
+    </body>
+</html>
