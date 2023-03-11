@@ -12,3 +12,7 @@ Generator działa w oparciu o stereotypowe nazwy firm, które można znaleźć w
 ### Kontrybucja 🤝
 
 Zachęcam do dodawania nowych branż i potencjalnych członów nazw firm do zmiennej `industries` w [tej linii](https://github.com/Zales0123/PolishCompanyNameGenerator/blob/main/index.html#L89).
+
+### Demo 🚀
+
+Generator działa pod [tym](https://mpzalewski.com/PolishCompanyNameGenerator/) adresem
